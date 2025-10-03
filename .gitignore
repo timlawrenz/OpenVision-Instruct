@@ -1,0 +1,8 @@
+# Python virtual environment
+.venv/
+
+# Datasets
+data/
+
+# External code
+vendor/
