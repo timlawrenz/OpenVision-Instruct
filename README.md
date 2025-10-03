@@ -31,7 +31,7 @@ This project is made feasible by a specific, memory-efficient fine-tuning techni
 
 ### Phase 1: Environment & Data Preparation
 
-*Environment Setup*: Clone the official LLaVA-OneVision-1.5 repository and configure the necessary Python environment and dependencies.
+*Environment Setup*: Clone the official LLaVA-OneVision-1.5 repository and configure the necessary Python environment and dependencies. For detailed instructions, see the [Environment Setup Guide](./docs/setup.md).
 
 *Asset Acquisition*: Download the target pre-trained model weights (e.g., the 4B or 8B variant) and the OpenGPT-4o-Image dataset.
 
