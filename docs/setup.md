@@ -49,3 +49,23 @@ pip install packaging transformers peft bitsandbytes accelerate
 - **peft**: The Parameter-Efficient Fine-Tuning library, which contains the LoRA/QLoRA implementation.
 - **bitsandbytes**: Provides the 4-bit quantization functions that make QLoRA memory-efficient.
 - **accelerate**: Simplifies running PyTorch training on any hardware setup.
+
+## 4. Asset Acquisition
+
+With the environment set up, the next step is to acquire the base model and the fine-tuning dataset.
+
+### 4.1. Base Model Repository
+
+Clone the official LLaVA-OneVision repository. This contains the necessary model architecture, training scripts, and utilities. We will place it in a `vendor/` directory to keep it separate from our project-specific code.
+
+```bash
+git clone https://github.com/EvolvingLMMs-Lab/LLaVA-OneVision-1.5.git vendor/LLaVA-OneVision
+```
+
+### 4.2. Fine-Tuning Dataset
+
+Download the OpenGPT-4o-Image dataset from the Hugging Face Hub. The command below uses the `huggingface-hub` library to download the dataset files into a local `data/` directory.
+
+```bash
+.venv/bin/python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='WINDop/OpenGPT-4o-Image', repo_type='dataset', local_dir='data/OpenGPT-4o-Image')"
+```
