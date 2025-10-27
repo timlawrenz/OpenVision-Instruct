@@ -35,7 +35,7 @@ This project is made feasible by a specific, memory-efficient fine-tuning techni
 
 *Asset Acquisition*: Download the target pre-trained model weights (e.g., the 4B or 8B variant) and the OpenGPT-4o-Image dataset.
 
-*Data Formatting*: Develop a script to parse and reformat the OpenGPT-4o-Image dataset into the specific JSONL or conversational format required by the LLaVA fine-tuning scripts. This is a critical step to ensure the model can correctly interpret the instruction-image pairs.
+*Data Formatting*: Develop a script to parse and reformat the OpenGPT-4o-Image dataset into the specific JSONL or conversational format required by the LLaVA fine-tuning scripts. This is a critical step to ensure the model can correctly interpret the instruction-image pairs. See the [Data Preparation Plan](./docs/data_preparation.md) for details.
 
 ### Phase 2: Fine-Tuning with QLoRA
 
@@ -73,3 +73,28 @@ This is an open project, and community involvement is welcome. For now, the best
 *Open an Issue*: To suggest features, report bugs, or discuss the project direction.
 
 *Submit a Pull Request*: To contribute directly to the data processing scripts, training configurations, or documentation.
+
+## References
+
+```bibtex
+ @inproceedings{LLaVA-OneVision-1.5,
+  title={LLaVA-OneVision-1.5: Fully Open Framework for Democratized Multimodal Training},
+  author={An, Xiang and Xie, Yin and Yang, Kaicheng and Zhang, Wenkang and Zhao, Xiuwei and Cheng, Zheng and Wang, Yirui and Xu, Songcen and Chen, Changrui and Wu, Chunsheng and Tan, Huajie and Li, Chunyuan and Yang, Jing and Yu, Jie and Wang, Xiyao and Qin, Bin and Wang, Yumeng and Yan, Zizhen and Feng, Ziyong and Liu, Ziwei and Li, Bo and Deng, Jiankang},
+  booktitle={arXiv},  
+  year={2025}
+ }
+
+ @inproceedings{xie2025region,
+  title={Region-based Cluster Discrimination for Visual Representation Learning},
+  author={Xie, Yin and Yang, Kaicheng and An, Xiang and Wu, Kun and Zhao, Yongle and Deng, Weimo and Ran, Zimin and Wang, Yumeng and Feng, Ziyong and Miles, Roy and Elezi, Ismail and Deng, Jiankang},
+  booktitle={ICCV},
+  year={2025}
+}
+
+ @.venv/lib/python3.11/site-packages/sympy/physics/mechanics/__pycache__/particle.cpython-311.pyc{lillava,
+  title={LLaVA-OneVision: Easy Visual Task Transfer},
+  author={Li, Bo and Zhang, Yuanhan and Guo, Dong and Zhang, Renrui and Li, Feng and Zhang, Hao and Zhang, Kaichen and Zhang, Peiyuan and Li, Yanwei and Liu, Ziwei and Li, Chunyuan},
+  journal={Transactions on Machine Learning Research}
+  year={2024}
+}
+```

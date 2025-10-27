@@ -6,7 +6,24 @@ This document details the steps required to set up the Python environment for th
 
 The deep learning ecosystem, particularly libraries with complex CUDA backends, can be sensitive to the Python version. To ensure maximum compatibility and access to pre-compiled binaries, this project is standardized on **Python 3.11**.
 
-## 2. Virtual Environment
+## 2. System-level Prerequisites
+
+Before creating the virtual environment, ensure you have the necessary system-level packages installed. These are required to compile some of the Python dependencies from source.
+
+### 2.1. Python Development Headers
+
+The build process for several libraries requires the Python C development headers. Install them using your system's package manager.
+
+For Debian/Ubuntu-based systems:
+```bash
+sudo apt-get update && sudo apt-get install python3.11-dev
+```
+
+### 2.2. NVIDIA CUDA Toolkit
+
+While many CUDA libraries are installed via `pip`, the build process for `transformer_engine` requires the CUDA Toolkit to be available in the system's path to find necessary headers like `cudnn.h`. A system-wide installation is recommended. Please ensure you have the NVIDIA CUDA Toolkit installed from the official NVIDIA website.
+
+## 3. Virtual Environment
 
 First, create a virtual environment in the project's root directory:
 
@@ -24,37 +41,23 @@ source .venv/bin/activate
 
 All subsequent commands should be run within this activated environment.
 
-## 3. Core Dependencies
+## 4. Core Dependencies
 
-The fine-tuning process relies on the PyTorch and Hugging Face ecosystems. Install the core libraries with the following commands.
+To ensure a reproducible environment and prevent dependency conflicts, all required Python packages are listed in the `requirements.txt` file.
 
-### 3.1. PyTorch
-
-Install PyTorch with support for CUDA 12.1, which is required to leverage NVIDIA GPUs like the RTX 4090.
+Install all core dependencies, including PyTorch, the Hugging Face ecosystem, and QLoRA tooling, by running the following command from the root of the project:
 
 ```bash
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements.txt
 ```
 
-### 3.2. Hugging Face Ecosystem & QLoRA Tooling
+This single command installs the correct, pinned versions of all necessary libraries, ensuring the environment is consistent and stable.
 
-Install the necessary libraries for loading the LLaVA model, applying the QLoRA technique, and managing the training process.
-
-```bash
-pip install packaging transformers peft bitsandbytes accelerate
-```
-
-- **packaging**: A core dependency for many Python projects.
-- **transformers**: Provides the LLaVA model implementation and infrastructure.
-- **peft**: The Parameter-Efficient Fine-Tuning library, which contains the LoRA/QLoRA implementation.
-- **bitsandbytes**: Provides the 4-bit quantization functions that make QLoRA memory-efficient.
-- **accelerate**: Simplifies running PyTorch training on any hardware setup.
-
-## 4. Asset Acquisition
+## 5. Asset Acquisition
 
 With the environment set up, the next step is to acquire the base model and the fine-tuning dataset.
 
-### 4.1. Base Model Repository
+### 5.1. Base Model Repository
 
 Clone the official LLaVA-OneVision repository. This contains the necessary model architecture, training scripts, and utilities. We will place it in a `vendor/` directory to keep it separate from our project-specific code.
 
@@ -62,7 +65,7 @@ Clone the official LLaVA-OneVision repository. This contains the necessary model
 git clone https://github.com/EvolvingLMMs-Lab/LLaVA-OneVision-1.5.git vendor/LLaVA-OneVision
 ```
 
-### 4.2. Fine-Tuning Dataset
+### 5.2. Fine-Tuning Dataset
 
 Download the OpenGPT-4o-Image dataset from the Hugging Face Hub. The command below uses the `huggingface-hub` library to download the dataset files into a local `data/` directory.
 
