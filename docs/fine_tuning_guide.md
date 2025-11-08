@@ -1,37 +1,36 @@
 # Fine-Tuning Guide
 
-This document details the process for fine-tuning the LLaVA-OneVision model using the QLoRA methodology. It covers the discovery of the correct training script, the configuration of the training process, and the final script used to launch the fine-tuning.
+This document provides a high-level overview of the fine-tuning process for the OpenVision-Instruct project. For specific commands and step-by-step instructions, please refer to the [Training Commands](./training_commands.md) and [Evaluation Guide](./evaluation_guide.md).
 
-## 1. Discovering the Training Script
+## 1. The Training Environment
 
-Initial exploration of the `vendor/LLaVA-OneVision` repository did not reveal a straightforward `finetune.py` or `train.py` script in the root directory. The `README.md` and the file structure pointed towards a more complex, multi-stage training process managed by shell scripts.
+We use the official Docker container provided by the `LLaVA-OneVision` repository. This approach ensures a consistent, reproducible environment with all necessary dependencies and CUDA libraries pre-configured. All training and utility scripts are run from within this container.
 
-The key discovery was the `examples/llava_ov_1_5/quick_start/stage_2_instruct_llava_ov_4b.sh` script. Analysis of this script revealed that it is a wrapper that launches the main Python training program: `aiak_training_llm/train.py`. This became our target for customization.
+## 2. The Core Training Script
 
-## 2. Understanding the Training Configuration
+The primary script for our fine-tuning task is `vendor/LLaVA-OneVision/examples/llava_ov_1_5/quick_start/stage_2_instruct_llava_ov_4b.sh`.
 
-By examining the launch script and the argument parsing logic in `aiak_training_llm/train/arguments.py`, we identified the key parameters to control the fine-tuning process.
+This is a high-level wrapper script that orchestrates the "Stage 2" instruction fine-tuning process. It is responsible for launching the underlying Python training code (`aiak_training_llm/train.py`) with the correct set of default hyperparameters for this phase.
 
-### QLoRA-Style Fine-Tuning
+## 3. Configuration via Environment Variables
 
-The most critical finding was that the framework handles Parameter-Efficient Fine-Tuning (PEFT) through the `--trainable-modules` argument. While there is no explicit `--qlora` flag, setting this parameter to `adapter` instructs the training script to freeze the base model and only train the lightweight adapter layers. This is the core mechanism that makes fine-tuning on consumer hardware feasible and is equivalent to the QLoRA approach outlined in the project's `README.md`.
+Instead of creating a custom script or passing a long list of command-line arguments, we configure the training process by setting environment variables before calling the script. This is the standard method used by the `LLaVA-OneVision` framework.
 
-### Data Configuration
+The key variables we use are:
+-   `AIAK_TRAINING_PATH`: The root of the `LLaVA-OneVision` vendor code.
+-   `DATA_PATH`: The path to our prepared dataset (`prepared_data.jsonl`).
+-   `TOKENIZER_PATH`: The path to the base model's tokenizer files.
+-   `CHECKPOINT_PATH`: The path to the model checkpoint to start from. For a new run, this is the converted base model. For resuming, this is the path to a saved training checkpoint.
+-   `SAVE_CKPT_PATH`: The directory where new training checkpoints will be saved.
 
-The training script uses a flexible data loading system that is configured via a JSON file. The default configuration is located at `vendor/LLaVA-OneVision/configs/sft_dataset_config.json`. Our analysis showed that our prepared dataset needed to conform to the `multimodal` format defined in this file to be correctly interpreted by the training script.
+## 4. Parameter-Efficient Fine-Tuning (PEFT)
 
-## 3. The Fine-Tuning Script
+The `stage_2_instruct_llava_ov_4b.sh` script, by default, attempts to perform full-model fine-tuning, which requires a very large amount of GPU memory. To make training feasible on a single consumer GPU, we have modified the script to perform Parameter-Efficient Fine-Tuning (PEFT).
 
-Based on these findings, we will create a custom launch script, `scripts/run_finetune.sh`, to orchestrate the fine-tuning process. This script will:
+This was achieved by changing the `--trainable-modules` argument within the script from `language_model adapter vision_model` to simply `adapter`. This crucial change instructs the framework to freeze the vast majority of the base model's weights and only train the small, lightweight "adapter" layers. This is the key technique that makes fine-tuning possible on a 24GB GPU and is analogous to the QLoRA methodology.
 
-1.  **Set Environment Variables**: Define paths to the training scripts, base model, tokenizer, and our custom dataset.
-2.  **Configure Training Parameters**:
-    -   Load the pre-trained `LLaVA-OneVision-1.5-4B-stage0` model.
-    -   Point to our `data/finetune_data_multimodal.json` file.
-    -   Set `--training-phase` to `sft` (Supervised Fine-Tuning).
-    -   Set `--trainable-modules` to `adapter` to enable our QLoRA-style fine-tuning.
-    -   Use the built-in `multimodal` dataset configuration.
-    -   Configure hyperparameters such as learning rate, batch size, and sequence length for efficient training on a 24GB GPU.
-3.  **Launch the Training**: Execute the `aiak_training_llm/train.py` script with the specified configuration.
+## 5. Checkpointing and Resuming
 
-This approach allows us to leverage the power of the LLaVA-OneVision training framework while adapting it to our specific dataset and hardware constraints, staying true to the project's goal of efficient, democratized AI.
+The training framework has built-in support for saving and resuming progress. By setting the `--save-interval` argument, we instruct the script to save a complete checkpoint periodically.
+
+To resume, we simply update the `CHECKPOINT_PATH` to point to the desired saved checkpoint. The script handles the rest, loading the model weights, optimizer state, and learning rate to continue training seamlessly.

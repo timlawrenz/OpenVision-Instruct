@@ -1,0 +1,74 @@
+--- Single-node mode ---
+MASTER_ADDR: 127.0.0.1
+Current Node IP: 192.168.86.176
+Current Node Rank: 0
+Node Size: 1
+/usr/local/lib/python3.12/dist-packages/modelopt/torch/utils/import_utils.py:31: UserWarning: Failed to import transformers plugin due to: ImportError("huggingface-hub>=0.30.0,<1.0 is required for a normal functioning of this module, but found huggingface-hub==1.0.1.\nTry: `pip install transformers -U` or `pip install -e '.[dev]'` if you're working with git main"). You may ignore this warning if you do not need this plugin.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/modelopt/torch/utils/import_utils.py:31: UserWarning: Failed to import transformers plugin due to: ImportError("huggingface-hub>=0.30.0,<1.0 is required for a normal functioning of this module, but found huggingface-hub==1.0.1.\nTry: `pip install transformers -U` or `pip install -e '.[dev]'` if you're working with git main"). You may ignore this warning if you do not need this plugin.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/modelopt/torch/utils/import_utils.py:31: UserWarning: Failed to import huggingface plugin due to: ImportError("huggingface-hub>=0.30.0,<1.0 is required for a normal functioning of this module, but found huggingface-hub==1.0.1.\nTry: `pip install transformers -U` or `pip install -e '.[dev]'` if you're working with git main"). You may ignore this warning if you do not need this plugin.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/workspace/OpenVision-Instruct/vendor/LLaVA-OneVision/aiak_training_llm/train.py", line 3, in <module>
+    from aiak_training_llm.train import parse_train_args
+  File "/workspace/OpenVision-Instruct/vendor/LLaVA-OneVision/aiak_training_llm/__init__.py", line 3, in <module>
+    from aiak_training_llm.utils import get_args
+  File "/workspace/OpenVision-Instruct/vendor/LLaVA-OneVision/aiak_training_llm/utils/__init__.py", line 8, in <module>
+    from .initialize import parse_arguments, initialize_aiak_megatron
+  File "/workspace/OpenVision-Instruct/vendor/LLaVA-OneVision/aiak_training_llm/utils/initialize.py", line 37, in <module>
+    from .global_vars import set_aiak_extra_global_vars
+  File "/workspace/OpenVision-Instruct/vendor/LLaVA-OneVision/aiak_training_llm/utils/global_vars.py", line 11, in <module>
+    from aiak_training_llm.tokenizer import build_tokenizer
+  File "/workspace/OpenVision-Instruct/vendor/LLaVA-OneVision/aiak_training_llm/tokenizer/__init__.py", line 3, in <module>
+    from .tokenizer import build_tokenizer
+  File "/workspace/OpenVision-Instruct/vendor/LLaVA-OneVision/aiak_training_llm/tokenizer/tokenizer.py", line 13, in <module>
+    from .tokenization_hf import AutoTokenizerFromHF
+  File "/workspace/OpenVision-Instruct/vendor/LLaVA-OneVision/aiak_training_llm/tokenizer/tokenization_hf.py", line 5, in <module>
+    from transformers import AutoTokenizer
+  File "/usr/local/lib/python3.12/dist-packages/transformers/__init__.py", line 27, in <module>
+    from . import dependency_versions_check
+  File "/usr/local/lib/python3.12/dist-packages/transformers/dependency_versions_check.py", line 57, in <module>
+    require_version_core(deps[pkg])
+  File "/usr/local/lib/python3.12/dist-packages/transformers/utils/versions.py", line 117, in require_version_core
+    return require_version(requirement, hint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/utils/versions.py", line 111, in require_version
+    _compare_versions(op, got_ver, want_ver, requirement, pkg, hint)
+  File "/usr/local/lib/python3.12/dist-packages/transformers/utils/versions.py", line 44, in _compare_versions
+    raise ImportError(
+ImportError: huggingface-hub>=0.30.0,<1.0 is required for a normal functioning of this module, but found huggingface-hub==1.0.1.
+Try: `pip install transformers -U` or `pip install -e '.[dev]'` if you're working with git main
+E1103 20:29:47.795000 952 torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 0 (pid: 987) of binary: /usr/bin/python
+Traceback (most recent call last):
+  File "/usr/local/bin/torchrun", line 33, in <module>
+    sys.exit(load_entry_point('torch==2.7.0a0+79aa17489c.nv25.4', 'console_scripts', 'torchrun')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 892, in main
+    run(args)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 883, in run
+    elastic_launch(
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 139, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 270, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/workspace/OpenVision-Instruct/vendor/LLaVA-OneVision/aiak_training_llm/train.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-11-03_20:29:47
+  host      : game
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 987)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

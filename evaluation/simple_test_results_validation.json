@@ -1,0 +1,92 @@
+[
+  {
+    "id": "sample_282",
+    "instruction": "Remove the word 'Sfice' under the Location column.",
+    "image_path": "evaluation/test_samples/sample_282.input.jpg",
+    "image_size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "id": "sample_604",
+    "instruction": "Remove the word \"Alice\" from the center of the image.",
+    "image_path": "evaluation/test_samples/sample_604.input.jpg",
+    "image_size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "id": "sample_470",
+    "instruction": "Remove the word 'Dinner' in the image.",
+    "image_path": "evaluation/test_samples/sample_470.input.jpg",
+    "image_size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "id": "sample_126",
+    "instruction": "Remove the word 'DATE' from the card.",
+    "image_path": "evaluation/test_samples/sample_126.input.jpg",
+    "image_size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "id": "sample_451",
+    "instruction": "Remove the word \"Travel\" from the list.",
+    "image_path": "evaluation/test_samples/sample_451.input.jpg",
+    "image_size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "id": "sample_194",
+    "instruction": "Remove the word 'Merry' from the image.",
+    "image_path": "evaluation/test_samples/sample_194.input.jpg",
+    "image_size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "id": "sample_524",
+    "instruction": "Remove the word 'Daniel' from the image.",
+    "image_path": "evaluation/test_samples/sample_524.input.jpg",
+    "image_size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "id": "sample_147",
+    "instruction": "Remove the third occurrence of the word 'Congratulations' in the image.",
+    "image_path": "evaluation/test_samples/sample_147.input.jpg",
+    "image_size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "id": "sample_601",
+    "instruction": "Remove the word \"thanks\" in Bob's speech bubble.",
+    "image_path": "evaluation/test_samples/sample_601.input.jpg",
+    "image_size": [
+      1024,
+      1024
+    ]
+  },
+  {
+    "id": "sample_170",
+    "instruction": "Remove the word \"WAIT\" from the sign.",
+    "image_path": "evaluation/test_samples/sample_170.input.jpg",
+    "image_size": [
+      1024,
+      1024
+    ]
+  }
+]

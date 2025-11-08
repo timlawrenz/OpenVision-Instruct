@@ -1,0 +1,9 @@
+========================================
+Testing Megatron Inference (2 samples)
+========================================
+Checkpoint: stage_2_instruct_llava_ov_4b/iter_0000500
+Tokenizer: LLaVA-OneVision-1.5-4B-stage0
+Test samples: evaluation/test_samples/test_samples.json
+Output: evaluation/test_inference_results.json
+
+./scripts/test_megatron_inference.sh: line 45: python: command not found

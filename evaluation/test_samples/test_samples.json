@@ -1,0 +1,42 @@
+[
+  {
+    "id": "sample_282",
+    "instruction": "Remove the word 'Sfice' under the Location column."
+  },
+  {
+    "id": "sample_604",
+    "instruction": "Remove the word \"Alice\" from the center of the image."
+  },
+  {
+    "id": "sample_470",
+    "instruction": "Remove the word 'Dinner' in the image."
+  },
+  {
+    "id": "sample_126",
+    "instruction": "Remove the word 'DATE' from the card."
+  },
+  {
+    "id": "sample_451",
+    "instruction": "Remove the word \"Travel\" from the list."
+  },
+  {
+    "id": "sample_194",
+    "instruction": "Remove the word 'Merry' from the image."
+  },
+  {
+    "id": "sample_524",
+    "instruction": "Remove the word 'Daniel' from the image."
+  },
+  {
+    "id": "sample_147",
+    "instruction": "Remove the third occurrence of the word 'Congratulations' in the image."
+  },
+  {
+    "id": "sample_601",
+    "instruction": "Remove the word \"thanks\" in Bob's speech bubble."
+  },
+  {
+    "id": "sample_170",
+    "instruction": "Remove the word \"WAIT\" from the sign."
+  }
+]

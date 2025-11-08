@@ -27,34 +27,29 @@ The Fine-Tuning Dataset: OpenGPT-4o-Image
 
 ## The Technical Approach
 
-This project is made feasible by a specific, memory-efficient fine-tuning technique that allows us to adapt a multi-billion parameter model on a single GPU.
+Our methodology is broken down into several key phases, from setting up the environment to fine-tuning and evaluating the model.
 
-### Phase 1: Environment & Data Preparation
+### Phase 1: Environment and Data Preparation
 
-*Environment Setup*: Clone the official LLaVA-OneVision-1.5 repository and configure the necessary Python environment and dependencies. For detailed instructions, see the [Environment Setup Guide](./docs/setup.md).
+*   **Environment Setup**: We use the official Docker-based environment provided by the LLaVA-OneVision team to ensure reproducibility. For detailed instructions, see the [**Environment Setup Guide**](./docs/setup.md).
 
-*Asset Acquisition*: Download the target pre-trained model weights (e.g., the 4B or 8B variant) and the OpenGPT-4o-Image dataset.
+*   **Data Formatting**: A custom script parses the OpenGPT-4o-Image dataset into the specific JSONL format required by the training scripts. See the [Data Preparation Plan](./docs/data_preparation.md) for more details on the data structure.
 
-*Data Formatting*: Develop a script to parse and reformat the OpenGPT-4o-Image dataset into the specific JSONL or conversational format required by the LLaVA fine-tuning scripts. This is a critical step to ensure the model can correctly interpret the instruction-image pairs. See the [Data Preparation Plan](./docs/data_preparation.md) for details.
+### Phase 2: Fine-Tuning
 
-### Phase 2: Fine-Tuning with QLoRA
+*   **Core Technology**: The fine-tuning process uses a Parameter-Efficient Fine-Tuning (PEFT) approach, analogous to QLoRA. This freezes the base model and trains only a small number of "adapter" layers, making it possible to train on a single prosumer GPU (e.g., an NVIDIA RTX 4090). For a high-level overview, see the [**Fine-Tuning Guide**](./docs/fine_tuning_guide.md).
 
-Core Technology: We will use QLoRA (Quantized Low-Rank Adaptation) for fine-tuning. This is the key to our hardware feasibility.
+*   **Training Process**: The training is managed by a shell script that handles checkpointing, allowing you to stop and resume the process. For the specific commands to start, stop, and resume training, refer to the [**Training Commands Guide**](./docs/training_commands.md).
 
-Process:
- - The base LLaVA model will be loaded in a quantized 4-bit precision, drastically reducing its memory footprint.
- - The weights of the base model will be frozen.
- - A very small number of trainable "adapter" layers will be added to the model.
- - Training will commence, updating only these tiny adapters. This allows us to fine-tune the model with a VRAM footprint that fits on a prosumer GPU.
- - Target Hardware: The initial fine-tuning runs will be targeted for an NVIDIA RTX 4090 with 24 GB of VRAM.
+### Phase 3: Evaluation
 
-### Phase 3: Evaluation, Merging & Release
+*   **Performance Tracking**: To measure the model's improvement over time, we evaluate saved checkpoints against the `mme` (MM-Eval) benchmark. This requires converting the training checkpoints to a standard Hugging Face format before running the evaluation. The full process is detailed in the [**Evaluation Guide**](./docs/evaluation_guide.md).
 
-*Evaluation*: The model's performance will be evaluated through both quantitative metrics (if applicable benchmarks are available) and qualitative testing on a hold-out set of instructions from the dataset.
+### Phase 4: Merging & Release
 
-*Model Release*: Upon successful fine-tuning, the trained LoRA adapter weights will be merged with the original base model weights to create a final, standalone model.
+*   **Model Release**: Upon successful fine-tuning, the trained adapter weights will be merged with the original base model weights to create a final, standalone model.
 
-*Distribution*: The final model will be released on Hugging Face under a permissive license, complete with a detailed model card explaining its capabilities, limitations, and usage.
+*   **Distribution**: The final model will be released on Hugging Face under a permissive license, complete with a detailed model card explaining its capabilities, limitations, and usage.
 
 ## Our Philosophy & The Value We Hope to Generate
 

@@ -1,74 +1,117 @@
 # Environment Setup
 
-This document details the steps required to set up the Python environment for the OpenVision-Instruct project. We prioritize using a virtual environment to ensure dependencies are isolated and reproducible.
+This document details the steps required to set up the environment for the OpenVision-Instruct project. We will follow the recommended Docker-based setup from the official LLaVA-OneVision-1.5 repository to ensure a reproducible and stable environment.
 
-## 1. Python Version
+## 1. Prerequisites
 
-The deep learning ecosystem, particularly libraries with complex CUDA backends, can be sensitive to the Python version. To ensure maximum compatibility and access to pre-compiled binaries, this project is standardized on **Python 3.11**.
+-   **Docker**: Ensure you have Docker installed and running on your system.
+-   **NVIDIA GPU**: A CUDA-enabled NVIDIA GPU is required for training. The instructions are tailored for an A100 80GB GPU, but other GPUs with sufficient VRAM (e.g., RTX 4090 24GB) should work.
+-   **NVIDIA Container Toolkit**: You must have the NVIDIA Container Toolkit installed to enable GPU access within Docker containers.
 
-## 2. System-level Prerequisites
+## 2. Clone the LLaVA-OneVision-1.5 Repository
 
-Before creating the virtual environment, ensure you have the necessary system-level packages installed. These are required to compile some of the Python dependencies from source.
-
-### 2.1. Python Development Headers
-
-The build process for several libraries requires the Python C development headers. Install them using your system's package manager.
-
-For Debian/Ubuntu-based systems:
-```bash
-sudo apt-get update && sudo apt-get install python3.11-dev
-```
-
-### 2.2. NVIDIA CUDA Toolkit
-
-While many CUDA libraries are installed via `pip`, the build process for `transformer_engine` requires the CUDA Toolkit to be available in the system's path to find necessary headers like `cudnn.h`. A system-wide installation is recommended. Please ensure you have the NVIDIA CUDA Toolkit installed from the official NVIDIA website.
-
-## 3. Virtual Environment
-
-First, create a virtual environment in the project's root directory:
-
-```bash
-python3.11 -m venv .venv
-```
-
-This command creates a `./.venv/` directory containing a private copy of the Python interpreter and its libraries.
-
-To activate the environment, use the following command:
-
-```bash
-source .venv/bin/activate
-```
-
-All subsequent commands should be run within this activated environment.
-
-## 4. Core Dependencies
-
-To ensure a reproducible environment and prevent dependency conflicts, all required Python packages are listed in the `requirements.txt` file.
-
-Install all core dependencies, including PyTorch, the Hugging Face ecosystem, and QLoRA tooling, by running the following command from the root of the project:
-
-```bash
-pip install -r requirements.txt
-```
-
-This single command installs the correct, pinned versions of all necessary libraries, ensuring the environment is consistent and stable.
-
-## 5. Asset Acquisition
-
-With the environment set up, the next step is to acquire the base model and the fine-tuning dataset.
-
-### 5.1. Base Model Repository
-
-Clone the official LLaVA-OneVision repository. This contains the necessary model architecture, training scripts, and utilities. We will place it in a `vendor/` directory to keep it separate from our project-specific code.
+First, clone the official LLaVA-OneVision-1.5 repository. We will place it in a `vendor/` directory to keep it separate from our project-specific code.
 
 ```bash
 git clone https://github.com/EvolvingLMMs-Lab/LLaVA-OneVision-1.5.git vendor/LLaVA-OneVision
 ```
 
-### 5.2. Fine-Tuning Dataset
+## 3. Build and Run the Docker Container
 
-Download the OpenGPT-4o-Image dataset from the Hugging Face Hub. The command below uses the `huggingface-hub` library to download the dataset files into a local `data/` directory.
+Navigate into the cloned repository and build the Docker image.
 
 ```bash
-.venv/bin/python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='WINDop/OpenGPT-4o-Image', repo_type='dataset', local_dir='data/OpenGPT-4o-Image')"
+cd vendor/LLaVA-OneVision
+docker build -t llava_megatron:25.04 .
 ```
+
+After the build is complete, run the container. This command mounts the current project directory (`OpenVision-Instruct`) into the container at `/workspace/OpenVision-Instruct`.
+
+```bash
+# Make sure you are in the root of the OpenVision-Instruct project directory
+docker run -it --gpus all \
+--ipc host --net host --privileged --cap-add IPC_LOCK \
+--ulimit memlock=-1 --ulimit stack=67108864 --rm \
+-v $(pwd):/workspace/OpenVision-Instruct \
+-w /workspace/OpenVision-Instruct \
+--name "llava_megatron_container" \
+llava_megatron:25.04 /bin/bash
+```
+
+All subsequent commands should be run from within this Docker container.
+
+## 4. Asset Acquisition
+
+### 4.1. Base Model
+
+Inside the container, you need to acquire the base model. You have two options:
+
+**Option 1: Download pre-trained model from Hugging Face**
+
+Download the `LLaVA-OneVision-1.5-4B-stage0` model directly from Hugging Face.
+
+```bash
+# You may need to install huggingface-cli first: pip install huggingface-cli
+# Then login: huggingface-cli login
+huggingface-cli download EvolvingLMMs-Lab/LLaVA-OneVision-1.5-4B-stage0 --local-dir LLaVA-OneVision-1.5-4B-stage0
+```
+
+**Option 2: Merge initial weights yourself**
+
+Alternatively, you can merge the initial weights from the original ViT and LLM:
+
+```bash
+python vendor/LLaVA-OneVision/ds/merge_model.py \
+--vit_path DeepGlint-AI/rice-vit-large-patch14-560 \
+--llm_path Qwen/Qwen3-4B-Instruct-2507 \
+--output LLaVA-OneVision-1.5-4B-stage0
+```
+
+### 4.2. Fine-Tuning Dataset
+
+Download the OpenGPT-4o-Image dataset from the Hugging Face Hub into the `data/` directory.
+
+```bash
+# Make sure you are in /workspace/OpenVision-Instruct inside the container
+python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='WINDop/OpenGPT-4o-Image', repo_type='dataset', local_dir='data/OpenGPT-4o-Image')"
+```
+
+## 5. Model Format Conversion
+
+
+
+The LLaVA-OneVision training scripts require the model to be in the Megatron format. Before running the conversion, create a directory on your NFS share to store the large checkpoint files.
+
+
+
+```bash
+
+# Create a directory for the converted checkpoints on your mounted data volume
+
+mkdir -p data/checkpoints
+
+```
+
+
+
+Now, convert the downloaded Hugging Face model to the Megatron format, ensuring the output is saved to the directory you just created.
+
+
+
+```bash
+
+AIAK_TRAINING_PATH=/workspace/OpenVision-Instruct/vendor/LLaVA-OneVision \
+
+bash vendor/LLaVA-OneVision/examples/llava_ov_1_5/convert/convert_4b_hf_to_mcore.sh \
+
+/workspace/OpenVision-Instruct/LLaVA-OneVision-1.5-4B-stage0 \
+
+/workspace/OpenVision-Instruct/data/checkpoints/LLaVA-OneVision-1.5-4B-stage0_mcore_tp1_pp1 \
+
+1 1
+
+```
+
+
+
+After these steps, the environment is set up and you are ready to proceed with data preparation and fine-tuning.
