@@ -1,5 +1,37 @@
 # Project OpenVision-Instruct
 
+> **⚠️ PROJECT STATUS: DISCONTINUED (November 2025)**
+> 
+> **TL;DR:** This project successfully trained LLaVA-OneVision on image editing instructions, but discovered a fundamental architectural limitation: **LLaVA can only output text, not images**. The model learned to understand and acknowledge editing instructions perfectly, but cannot generate actual edited images.
+> 
+> **What Was Achieved:**
+> - ✅ Successfully fine-tuned LLaVA-OneVision-1.5-4B (3,500 iterations)
+> - ✅ Model correctly understands and acknowledges image editing instructions
+> - ✅ Training pipeline and infrastructure fully functional
+> - ✅ Data preparation and evaluation framework complete
+> 
+> **Why Discontinued:**
+> - ❌ LLaVA architecture has no image decoder - fundamentally cannot generate images
+> - ❌ Training data included output images, but model architecture cannot use them
+> - ❌ Goal was to replicate Qwen2-VL image editing (Apache licensed), which requires image generation capability
+> - ❌ Would need different architecture (diffusion-based or with image decoder) to achieve actual image editing
+> 
+> **What This Repo Provides:**
+> - Complete working training pipeline for LLaVA-OneVision
+> - Data preparation scripts for OpenGPT-4o-Image dataset
+> - Evaluation and validation tools
+> - Documentation of what works and what doesn't
+> - Could be useful for: two-stage editing pipelines, instruction understanding, or as foundation for adding image generation
+> 
+> **For Future Work:**
+> - Consider InstructPix2Pix, MGIE, or similar architectures that can actually generate images
+> - Or use this as stage 1 (understanding) + diffusion model as stage 2 (generation)
+> - See [REALITY_CHECK.md](./REALITY_CHECK.md) for detailed analysis and alternatives
+> 
+> ---
+
+## Original Project Vision
+
 Fine-tuning LLaVA-OneVision on the OpenGPT-4o-Image dataset to create a powerful, open-source model for advanced, instruction-based image understanding and editing.
 
 The Vision: Democratizing Advanced Visual AI

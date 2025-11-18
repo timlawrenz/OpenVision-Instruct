@@ -6,3 +6,38 @@ data/
 
 # External code
 vendor/
+
+# Model checkpoints and weights
+checkpoints/
+*.safetensors
+*.bin
+*.pth
+*.pt
+*.ckpt
+
+# Training outputs
+logs/
+runs/
+wandb/
+
+# Evaluation results
+evaluation/results/
+evaluation/visual_tests/
+evaluation/*_results*.json
+evaluation/comparison/
+
+# Large model files
+*.tar.gz
+*.tar
+*.zip
+
+# Cache
+__pycache__/
+*.pyc
+.cache/
+*.egg-info/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
